@@ -4,7 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -15,10 +15,10 @@ public class EducAPIApplication implements CommandLineRunner {
 		SpringApplication.run(EducAPIApplication.class, args);	
 	}
 	
-	@RequestMapping("/")
+	@GetMapping("/")
     @ResponseBody
 	String index() {
-      return "Welcome to EducAPI! | VERSION: 0.0.1-SNAPSHOT";
+      return "Bem vindo, isso é um clone do EducAPI usada apenas para teste!";
     }
 	
 	@Override

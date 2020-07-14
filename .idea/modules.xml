@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EducAPI.iml" filepath="$PROJECT_DIR$/EducAPI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/EducAPI.iml" filepath="$PROJECT_DIR$/.idea/EducAPI.iml" />
     </modules>
   </component>
 </project>

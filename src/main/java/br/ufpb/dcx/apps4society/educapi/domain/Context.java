@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Cascade;
 
 /**
  * This class represents a set of related challenges.
@@ -30,52 +32,35 @@ public class Context implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "context_creator")
+
+	@ManyToOne
+	@JoinColumn(name="context_creator")
 	private User creator;
 	private String imageUrl;
 	private String soundUrl;
 	private String videoUrl;
-	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "CONTEXT_CHALLEGE", joinColumns = @JoinColumn(name = "context_id"), inverseJoinColumns = @JoinColumn(name = "challenge_id"))
-	private Set<Challenge> challenges = new HashSet<Challenge>();
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@ManyToMany(mappedBy = "contexts", cascade = CascadeType.PERSIST)
+	@Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+	private Set<Challenge> challenges = new HashSet<Challenge>();
+	
 	/**
 	 * Empty Constructor.
 	 */
-	public Context() {
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id       The id of this Context.
-	 * @param name     The Context name.
-	 * @param creator  The creator of this Context.
-	 * @param image    The image for this Context.
-	 * @param sound    The sound for this Context.
-	 * @param videoUrl The URL of a video for this Context.
-	 */
-	public Context(Long id, String name, User creator, String imageUrl, String soundUrl, String videoUrl) {
-		this.id = id;
-		this.name = name;
-		this.creator = creator;
-		this.imageUrl = imageUrl;
-		this.soundUrl = soundUrl;
-		this.videoUrl = videoUrl;
-	}
+	public Context() {}
 	
 	/**
 	 * Constructor
-	 * 
-	 * @param name     The Context name.
-	 * @param creator  The creator of this Context.
-	 * @param image    The image for this Context.
-	 * @param sound    The sound for this Context.
+	 * @param id The id of this Context.
+	 * @param name The Context name.
+	 * @param creator The creator of this Context.
+	 * @param imageUrl The image for this Context.
+	 * @param soundUrl The sound for this Context.
 	 * @param videoUrl The URL of a video for this Context.
 	 */
-	public Context(String name, User creator, String imageUrl, String soundUrl, String videoUrl) {
+	public Context(Long id, String name,  User creator, String imageUrl, String soundUrl, String videoUrl) {
+		this.id = id;
 		this.name = name;
 		this.creator = creator;
 		this.imageUrl = imageUrl;
@@ -95,7 +80,8 @@ public class Context implements Serializable {
 	/**
 	 * Changes the name of this Context.
 	 * 
-	 * @param name The new name of this Context.
+	 * @param name
+	 *            The new name of this Context.
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -113,7 +99,8 @@ public class Context implements Serializable {
 	/**
 	 * Changes the if of this Context.
 	 * 
-	 * @param id The new value of the id for this Context.
+	 * @param id
+	 *            The new value of the id for this Context.
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -124,7 +111,6 @@ public class Context implements Serializable {
 	 * 
 	 * @return The user that created this Context.
 	 */
-	@JsonIgnore
 	public User getCreator() {
 		return this.creator;
 	}
@@ -132,7 +118,8 @@ public class Context implements Serializable {
 	/**
 	 * Changes user that owns this Context.
 	 * 
-	 * @param creator The user creator.
+	 * @param creator
+	 *            The user creator.
 	 */
 	public void setCreator(User creator) {
 		this.creator = creator;
@@ -150,7 +137,8 @@ public class Context implements Serializable {
 	/**
 	 * Changes the sound of this Context.
 	 * 
-	 * @param sound The sound of this Context, represented by a byte[].
+	 * @param soundUrl
+	 *            The sound of this Context, represented by a byte[].
 	 */
 	public void setSoundUrl(String soundUrl) {
 		this.soundUrl = soundUrl;
@@ -168,11 +156,13 @@ public class Context implements Serializable {
 	/**
 	 * Changes the URL of a video representing this Context.
 	 * 
-	 * @param videoUrl the new URL of a video representing this Context.
+	 * @param videoUrl
+	 *            the new URL of a video representing this Context.
 	 */
 	public void setVideoUrl(String videoUrl) {
 		this.videoUrl = videoUrl;
 	}
+
 
 	/**
 	 * Gets a String representing the byte[] of an image for this Context.
@@ -186,12 +176,13 @@ public class Context implements Serializable {
 	/**
 	 * Sets the String representing the byte[] of an image for this Context.
 	 * 
-	 * @param imageUrl String representing the byte[] of an image for this Context.
+	 * @param imageUrl
+	 *            String representing the byte[] of an image for this Context.
 	 */
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-
+	
 	/**
 	 * Gets the HashSet that contains the challenges from this Context.
 	 * 
@@ -200,16 +191,17 @@ public class Context implements Serializable {
 	public Set<Challenge> getChallenges() {
 		return challenges;
 	}
-
+	
 	/**
 	 * Sets the HashSet that contains the challenges from this Context.
 	 * 
-	 * @param challenges HashSet that contains the challenges from this Context.
+	 * @param challenges
+	 *            HashSet that contains the challenges from this Context.
 	 */
 	public void setChallenges(Set<Challenge> challenges) {
 		this.challenges = challenges;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -217,7 +209,7 @@ public class Context implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -234,11 +226,11 @@ public class Context implements Serializable {
 			return false;
 		return true;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Context [id=" + id + ", name=" + name + ", creator=" + creator + ", imageUrl=" + imageUrl
 				+ ", soundUrl=" + soundUrl + ", videoUrl=" + videoUrl + ", challenges=" + challenges + "]";
 	}
-
+	
 }

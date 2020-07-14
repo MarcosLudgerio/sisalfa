@@ -43,8 +43,8 @@ public class DBService {
 		ch4.getContexts().addAll(Arrays.asList(c2));
 		
 		userRepository.saveAll(Arrays.asList(user1));
-		challengeRepository.saveAll(Arrays.asList(ch1, ch2, ch3, ch4));
 		contextRepository.saveAll(Arrays.asList(c1, c2));
+		challengeRepository.saveAll(Arrays.asList(ch1, ch2, ch3, ch4));
 		
 		return true;
 	}

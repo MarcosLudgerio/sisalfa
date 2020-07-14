@@ -50,10 +50,6 @@ public class UserService {
 		return repo.findAll();
 	}
 	
-	public void deleteForAll(){
-		repo.deleteAll();
-	}
-	
 	public Page<User> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);

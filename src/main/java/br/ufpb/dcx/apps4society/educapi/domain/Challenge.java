@@ -2,18 +2,13 @@ package br.ufpb.dcx.apps4society.educapi.domain;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a Challenge for exercises or games based on words.
@@ -26,32 +21,55 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Challenge implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String word;
-	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "challenge_creator")
+
+	@ManyToOne
+	@JoinColumn(name="challenge_creator")
 	private User creator;
 	private String soundUrl;
 	private String videoUrl;
 	private String imageUrl;
-	@JsonIgnore
-	@ManyToMany(mappedBy = "challenges", cascade = CascadeType.MERGE)
-	private Set<Context> contexts = new HashSet<Context>();
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@ManyToMany
+	@JoinTable(
+			name = "CHALLEGE_CONTEXT",
+			joinColumns = @JoinColumn(name="challenge_id"),
+			inverseJoinColumns = @JoinColumn(name="context_id")
+	)
+	private Set<Context> contexts = new HashSet<Context>();
+	
 	/**
 	 * Empty Constructor.
 	 */
-	public Challenge() {
+	public Challenge() { }
+
+	/**
+	 * Constructor
+	 * @param id The id of this Challenge.
+	 * @param word The word.
+	 * @param creator The creator of this Challenge.
+	 * @param soundUrl The soundUrl representing this Challenge.
+	 * @param videoUrl The URL of a video representing this Challenge.
+	 * @param imageUrl The imageUrl representing this Challenge.
+	 */
+	public Challenge(Long id, String word, User creator, String soundUrl, String videoUrl, String imageUrl, List<Context> contexts) {
+		this.id = id;
+		this.word = word;
+		this.creator = creator;
+		this.soundUrl = soundUrl;
+		this.videoUrl = videoUrl;
+		this.imageUrl = imageUrl;
+		this.contexts = new HashSet<Context>(contexts);
 	}
 
 	/**
 	 * Constructor
-	 * 
-	 * @param id       The id of this Challenge.
-	 * @param word     The word.
-	 * @param creator  The creator of this Challenge.
+	 * @param id The id of this Challenge.
+	 * @param word The word.
+	 * @param creator The creator of this Challenge.
 	 * @param soundUrl The soundUrl representing this Challenge.
 	 * @param videoUrl The URL of a video representing this Challenge.
 	 * @param imageUrl The imageUrl representing this Challenge.
@@ -64,24 +82,7 @@ public class Challenge implements Serializable {
 		this.videoUrl = videoUrl;
 		this.imageUrl = imageUrl;
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param word     The word.
-	 * @param creator  The creator of this Challenge.
-	 * @param soundUrl The soundUrl representing this Challenge.
-	 * @param videoUrl The URL of a video representing this Challenge.
-	 * @param imageUrl The imageUrl representing this Challenge.
-	 */
-	public Challenge(String word, User creator, String imageUrl, String soundUrl, String videoUrl) {
-		this.word = word;
-		this.creator = creator;
-		this.soundUrl = soundUrl;
-		this.videoUrl = videoUrl;
-		this.imageUrl = imageUrl;
-	}
-
+	
 	/**
 	 * Gets the word of this Challenge.
 	 * 
@@ -94,7 +95,8 @@ public class Challenge implements Serializable {
 	/**
 	 * Changes the word of this Challenge.
 	 * 
-	 * @param word The new word for this Challenge.
+	 * @param word
+	 *            The new word for this Challenge.
 	 */
 	public void setWord(String word) {
 		this.word = word;
@@ -112,7 +114,8 @@ public class Challenge implements Serializable {
 	/**
 	 * Changes the id of this Challenge.
 	 * 
-	 * @param id The new id for this Challenge.
+	 * @param id
+	 *            The new id for this Challenge.
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -123,7 +126,6 @@ public class Challenge implements Serializable {
 	 * 
 	 * @return the creator that owns this Challenge.
 	 */
-	@JsonIgnore
 	public User getCreator() {
 		return this.creator;
 	}
@@ -131,7 +133,8 @@ public class Challenge implements Serializable {
 	/**
 	 * Changes creator that owns this Challenge.
 	 * 
-	 * @param creator the new creator that owns this Challenge.
+	 * @param creator
+	 *            the new creator that owns this Challenge.
 	 */
 	public void setCreator(User creator) {
 		this.creator = creator;
@@ -142,7 +145,6 @@ public class Challenge implements Serializable {
 	 * 
 	 * @return the Contexts related to this Challenge.
 	 */
-	@JsonIgnore
 	public Set<Context> getContexts() {
 		return this.contexts;
 	}
@@ -150,9 +152,10 @@ public class Challenge implements Serializable {
 	/**
 	 * Changes the Contexts related to this Challenge.
 	 * 
-	 * @param contexts the Contexts related to this Challenge.
+	 * @param contexts
+	 *            the Contexts related to this Challenge.
 	 */
-	public void setContextId(Set<Context> contexts) {
+	public void setContexts(Set<Context> contexts) {
 		this.contexts = contexts;
 	}
 
@@ -168,7 +171,8 @@ public class Challenge implements Serializable {
 	/**
 	 * Changes the soundUrl for this Challenge.
 	 * 
-	 * @param soundUrl the new soundUrl for this Challenge.
+	 * @param soundUrl
+	 *            the new soundUrl for this Challenge.
 	 */
 	public void setSoundUrl(String soundUrl) {
 		this.soundUrl = soundUrl;
@@ -186,14 +190,15 @@ public class Challenge implements Serializable {
 	/**
 	 * Sets the URL of a video for this Challenge.
 	 * 
-	 * @param videoUrl The new video URL.
+	 * @param videoUrl
+	 *            The new video URL.
 	 */
 	public void setVideoUrl(String videoUrl) {
 		this.videoUrl = videoUrl;
 	}
 
 	/**
-	 * Returns the URL of a image for this Challenge.
+	 * Returns the URL of a image  for this Challenge.
 	 * 
 	 * @return the URL of a image for this Challenge.
 	 */
@@ -204,12 +209,13 @@ public class Challenge implements Serializable {
 	/**
 	 * Changes the imageUrl of this Challenge.
 	 * 
-	 * @param imageUrl The new imageUrl for this Challenge.
+	 * @param imageUrl
+	 *            The new imageUrl for this Challenge.
 	 */
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -217,7 +223,7 @@ public class Challenge implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -234,11 +240,12 @@ public class Challenge implements Serializable {
 			return false;
 		return true;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Challenge [id=" + id + ", word=" + word + ", creator=" + creator + ", soundUrl=" + soundUrl
-				+ ", videoUrl=" + videoUrl + ", imageUrl=" + imageUrl + ", contexts=" + contexts + "]";
+				+ ", videoUrl=" + videoUrl + ", imageUrl=" + imageUrl + ", contexts=" + contexts.toString() + "]";
 	}
+
 
 }

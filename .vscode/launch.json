@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - EducAPIApplication",
+            "request": "launch",
+            "mainClass": "br.ufpb.dcx.apps4society.educapi.EducAPIApplication",
+            "projectName": "EducAPI"
+        }
+    ]
+}

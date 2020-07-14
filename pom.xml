@@ -6,7 +6,7 @@
 
 	<groupId>br.ufpb.dcx.apps4society.educapi</groupId>
 	<artifactId>EducAPI</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>EducAPI</name>
@@ -15,8 +15,9 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.0.M4</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<version>2.2.7.RELEASE</version>
+		<relativePath/>
+		<!--  lookup parent from repository  -->
 	</parent>
 
 	<properties>
@@ -78,12 +79,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -91,7 +99,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
+		</plugins>		
 	</build>
 
 	<repositories>

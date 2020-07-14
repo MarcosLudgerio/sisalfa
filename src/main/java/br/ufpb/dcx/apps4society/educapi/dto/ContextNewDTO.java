@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import br.ufpb.dcx.apps4society.educapi.domain.User;
 import org.hibernate.validator.constraints.Length;
 
 import br.ufpb.dcx.apps4society.educapi.domain.Context;
@@ -14,14 +15,14 @@ public class ContextNewDTO  implements Serializable{
 	
 	private Long id;
 	@NotEmpty(message="Required")
-	@Length(min=5, max=50, message="The size must be between 5 and 50 characters")
+	@Length(min=2, max=50, message="The size must be between 5 and 50 characters")
 	private String name;
 	
 	private String imageUrl;
 	private String soundUrl;
 	private String videoUrl;
 	
-	private Long userId;
+	private User creator;
 	
 	public ContextNewDTO() {}
 
@@ -65,12 +66,11 @@ public class ContextNewDTO  implements Serializable{
 		this.videoUrl = videoUrl;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public User getCreator() {
+		return creator;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
-	
 }
